@@ -1,4 +1,5 @@
 # -ParticleTraining
 
-DxLibを使ったパーティクルの学習用プログラムです。
+
+DxLibを使った2Dパーティクルの学習用プログラムです。
 環境変数にDXLIB_DIRを入れDxLibを指定しなくては動作しません
