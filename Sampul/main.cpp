@@ -23,6 +23,10 @@ typedef struct tagSPARK
 } SPARK;
 
 int PlayerX, PlayerY;	// プレイヤーの位置
+int Image;
+int Image1;
+int Image2;
+int time;
 SHOT shot_[MAX_SHOT];	// ショットデータ
 SPARK spark_[MAX_SPARK];	// 火花データ
 
@@ -40,8 +44,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	int OldKey = 0;	// 前のキー入力状態
 	int sparkNum_, shotNum_;
 
-	//int Image = LoadGraph("Image/Yakiniku.png");
-		
+	
+
 	SetGraphMode(640, 480, 16);
 	if (DxLib_Init() == -1)	// ＤＸライブラリ初期化処理
 	{
@@ -66,6 +70,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	// ループ
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
+		time++;
 		// キー入力取得
 		OldKey = Key;
 		Key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
@@ -84,11 +89,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 		// 画面を初期化する
 		ClearDrawScreen();
-
+		Image = LoadGraph("Image/AuroraRing_R.png");
+		Image1 = LoadGraph("Image/AuroraRing_G.png");
+		Image2 = LoadGraph("Image/AuroraRing_B.png");
 		// プレイヤーを描画する
 		//DrawBox(PlayerX, PlayerY, PlayerX + 48, PlayerY + 48, GetColor(255, 0, 0), TRUE);
 		DrawBox(PlayerX, PlayerY, PlayerX + 48, PlayerY + 48, 0xff0000,TRUE);
-
+		//DrawGraph(0, 0,
+		//	/*GetColor(spark_[shotNum_].Bright, spark_[shotNum_].Bright, spark_[shotNum_].Bright)*/
+		//	Image, true);
 		// ショットを描画する
 		for (shotNum_ = 0; shotNum_ < MAX_SHOT; shotNum_++)
 		{
@@ -98,16 +107,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 					0xffffff,true);
 
 		}
+		DrawFormatString(0, 0, 0xffffff, "aaaaaaaa");
 
 		// 火花を描画する
 		for (shotNum_ = 0; shotNum_ < MAX_SPARK; shotNum_++)
 		{
 			// 火花データが有効な時のみ描画
-			if (spark_[shotNum_].Valid == 1)
+			/*	if (time / 10 % 3)*/ 
+				if (spark_[shotNum_].Valid == 1) {
+					DrawGraph(spark_[shotNum_].X / 200, spark_[shotNum_].Y/ 100,
+						/*GetColor(spark_[shotNum_].Bright, spark_[shotNum_].Bright, spark_[shotNum_].Bright)*/
+						Image, true);
+
+					
+						DrawGraph(spark_[shotNum_].X / 300, spark_[shotNum_].Y / 100,
+							/*GetColor(spark_[shotNum_].Bright, spark_[shotNum_].Bright, spark_[shotNum_].Bright)*/
+							Image1, true);
+					
+					
+						DrawGraph(spark_[shotNum_].X / 100, spark_[shotNum_].Y / 100,
+							/*GetColor(spark_[shotNum_].Bright, spark_[shotNum_].Bright, spark_[shotNum_].Bright)*/
+							Image2, true);
+					
+				}
+			
+		/*	if (spark_[shotNum_].Valid == 1)
 				DrawPixel(spark_[shotNum_].X / 100, spark_[shotNum_].Y / 100,
-					GetColor(spark_[shotNum_].Bright, spark_[shotNum_].Bright, spark_[shotNum_].Bright));
+					GetColor(spark_[shotNum_].Bright, spark_[shotNum_].Bright, spark_[shotNum_].Bright));*/
+
 
 		}
+		
 
 		// 裏画面の内容を表画面に反映させる
 		ScreenFlip();
